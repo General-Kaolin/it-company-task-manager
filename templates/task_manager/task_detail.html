@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    {{ task.name }}
+    <a href="{% url 'task_manager:task-delete' pk=task.id %}" class="btn btn-danger link-to-page">
+      Delete
+    </a>
+
+    <a href="{% url 'task_manager:task-update' pk=task.id %}" class="btn btn-secondary link-to-page">
+      Update
+    </a>
+  </h1>
+
+  <p><strong>Type:</strong> {{ task.task_type.name }}</p>
+  <p><strong>Priority:</strong> {{ task.get_priority_display }}</p>
+  <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+  <p><strong>Status:</strong> {% if task.is_completed %}Completed{% else %}In progress{% endif %}</p>
+  <p><strong>Description:</strong> {{ task.description }}</p>
+
+  <h3>
+    Assignees
+
+    {% if task in user.tasks.all %}
+      <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-danger link-to-page">
+        Delete me from this task
+      </a>
+    {% else %}
+      <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-success link-to-page">
+        Assign me to this task
+      </a>
+    {% endif %}
+  </h3>
+  <hr>
+  <ul>
+    {% for assignee in task.assignees.all %}
+      <li>
+        <a href="{{ assignee.get_absolute_url }}">
+          {{ assignee.username }} ({{ assignee.first_name }} {{ assignee.last_name }})
+        </a>
+        {% if assignee.position %} — {{ assignee.position.name }}{% endif %}
+      </li>
+    {% empty %}
+      <li>No assignees yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
