@@ -3,8 +3,8 @@
 
 {% block content %}
   <h1>
-    Position List
-    <a href="{% url 'task_manager:position-create' %}" class="btn btn-primary link-to-page">
+    Task Type List
+    <a href="{% url 'task_manager:task-type-create' %}" class="btn btn-primary link-to-page">
       Create
     </a>
   </h1>
@@ -15,7 +15,7 @@
   </form>
   <br>
 
-  {% if position_list %}
+  {% if task_type_list %}
     <table class="table">
       <tr>
         <th>ID</th>
@@ -24,21 +24,21 @@
         <th>Delete</th>
       </tr>
 
-      {% for position in position_list %}
+      {% for task_type in task_type_list %}
         <tr>
           <td>
-            {{ position.id }}
+            {{ task_type.id }}
           </td>
           <td>
-            {{ position.name }}
+            {{ task_type.name }}
           </td>
           <td>
-            <a href="{% url 'task_manager:position-update' pk=position.id %}">
+            <a href="{% url 'task_manager:task-type-update' pk=task_type.id %}">
               Update
             </a>
           </td>
           <td>
-            <a style="color: red" href="{% url 'task_manager:position-delete' pk=position.id %}">
+            <a style="color: red" href="{% url 'task_manager:task-type-delete' pk=task_type.id %}">
               Delete
             </a>
           </td>
@@ -47,7 +47,6 @@
     </table>
 
   {% else %}
-    <p>There are no positions in the service.</p>
+    <p>There are no task types in the service.</p>
   {% endif %}
 {% endblock %}
-
