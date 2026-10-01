@@ -24,6 +24,7 @@ def index(request):
     num_tasks = Task.objects.count()
     num_positions = Position.objects.count()
     num_completed_tasks = Task.objects.filter(is_completed=True).count()
+    num_task_types = TaskType.objects.count()
 
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
@@ -34,6 +35,7 @@ def index(request):
         "num_positions": num_positions,
         "num_completed_tasks": num_completed_tasks,
         "num_visits": num_visits + 1,
+        "num_task_types": num_task_types,
     }
 
     return render(request, "task_manager/index.html", context=context)

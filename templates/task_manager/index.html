@@ -1,19 +1,125 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Task Manager Home</h1>
-    <p>Welcome!</p>
-    <h2>Dynamic content</h2>
-    <p>The Task Manager has the following record counts:</p>
-    <ul>
-        <li><strong>Tasks:</strong> {{ num_tasks }}</li>
-        <li><strong>Workers:</strong> {{ num_workers }}</li>
-        <li><strong>Task types:</strong> {{ num_task_types }}</li>
-        <li><strong>Positions:</strong> {{ num_positions }}</li>
-    </ul>
+<style>
+  .border-left-primary { border-left: 0.25rem solid #4e73df !important; }
+  .border-left-success { border-left: 0.25rem solid #1cc88a !important; }
+  .border-left-info { border-left: 0.25rem solid #36b9cc !important; }
+  .border-left-warning { border-left: 0.25rem solid #f6c23e !important; }
+</style>
 
-    <p>You have visited this page
-        {{ num_visits }} time{{ num_visits|pluralize }}.
-    </p>
+<div class="mb-4">
+  <h1 class="h3 font-weight-bold text-gray-800">Dashboard</h1>
+  <p class="text-muted">Welcome back, <strong>{{ user.username }}</strong>! Here is an overview of your task manager.</p>
+</div>
 
+<!-- Карточки со статистикой -->
+<div class="row mb-4">
+  <div class="col-xl-3 col-md-6 mb-3">
+    <div class="card border-left-primary shadow-sm h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Tasks</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ num_tasks }}</div>
+          </div>
+          <div class="col-auto">
+            <i class="bi bi-check2-square text-secondary" style="font-size: 2rem;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-3">
+    <div class="card border-left-success shadow-sm h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Workers</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ num_workers }}</div>
+          </div>
+          <div class="col-auto">
+            <i class="bi bi-people text-secondary" style="font-size: 2rem;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-3">
+    <div class="card border-left-info shadow-sm h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Positions</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ num_positions }}</div>
+          </div>
+          <div class="col-auto">
+            <i class="bi bi-briefcase text-secondary" style="font-size: 2rem;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-3">
+    <div class="card border-left-warning shadow-sm h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Task Types</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ num_task_types }}</div>
+          </div>
+          <div class="col-auto">
+            <i class="bi bi-tags text-secondary" style="font-size: 2rem;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Быстрые действия и инфо о пользователе -->
+<div class="row">
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+      </div>
+      <div class="card-body">
+        <p class="text-muted">Frequently used shortcuts to manage your project fast:</p>
+        <div>
+          <a href="{% url 'task_manager:task-create' %}" class="btn btn-primary font-weight-bold mr-2 mb-2">
+            + Create New Task
+          </a>
+          <a href="{% url 'task_manager:task-list' %}" class="btn btn-outline-secondary font-weight-bold mr-2 mb-2">
+            View All Tasks
+          </a>
+          <a href="{% url 'task_manager:worker-list' %}" class="btn btn-outline-info font-weight-bold mb-2">
+            Manage Team
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3">
+        <h6 class="m-0 font-weight-bold text-primary">User Info</h6>
+      </div>
+      <div class="card-body text-center">
+        <div class="mb-3">
+          <i class="bi bi-person-circle text-secondary" style="font-size: 3.5rem;"></i>
+        </div>
+        <h5 class="font-weight-bold mb-1">{{ user.get_full_name|default:user.username }}</h5>
+        <p class="text-muted small mb-3">@{{ user.username }}</p>
+        {% if user.position %}
+          <span class="badge badge-info p-2">{{ user.position.name }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
