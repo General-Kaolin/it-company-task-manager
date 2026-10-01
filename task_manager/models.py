@@ -67,7 +67,7 @@ class Task(models.Model):
     is_completed = models.BooleanField(default=False)
     priority = models.CharField(
         max_length=10,
-        choices=Priority.choices, # type: ignore
+        choices=Priority.choices,  # type: ignore
         default=Priority.MEDIUM,
     )
     task_type = models.ForeignKey(

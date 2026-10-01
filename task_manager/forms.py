@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Position, Task, TaskType, Worker, Tag, Worker
+from .models import Task, Tag, Worker
 
 
 # --- Forms for Task ---
@@ -48,12 +47,6 @@ class WorkerCreationForm(UserCreationForm):
         )
 
 
-class WorkerUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Worker
-        fields = ["first_name", "last_name", "email", "position"]
-
-
 class WorkerSearchForm(forms.Form):
     username = forms.CharField(
         max_length=255,
@@ -67,12 +60,6 @@ class WorkerSearchForm(forms.Form):
 
 # --- Forms for Position ---
 
-class PositionForm(forms.ModelForm):
-    class Meta:
-        model = Position
-        fields = "__all__"
-
-
 class PositionSearchForm(forms.Form):
     name = forms.CharField(
         max_length=255,
@@ -85,12 +72,6 @@ class PositionSearchForm(forms.Form):
 
 
 # --- Forms for TaskType ---
-
-class TaskTypeForm(forms.ModelForm):
-    class Meta:
-        model = TaskType
-        fields = "__all__"
-
 
 class TaskTypeSearchForm(forms.Form):
     name = forms.CharField(

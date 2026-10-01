@@ -36,7 +36,7 @@ class TaskAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_completed", "priority", "task_type", "tags")
     search_fields = ("name", "description")
-    filter_horizontal = ("assignees", "tags")  # Удобный интерфейс выбора исполнителей и тегов
+    filter_horizontal = ("assignees", "tags")
 
     @admin.display(description="Tags")
     def get_tags(self, obj):

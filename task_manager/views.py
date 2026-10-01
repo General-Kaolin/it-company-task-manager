@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
+from django.views.decorators.http import require_POST
 
 from .forms import (
     PositionSearchForm,
@@ -142,7 +142,7 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Task.objects.select_related("task_type")
+        queryset = Task.objects.select_related("task_type").prefetch_related("tags")
         name = self.request.GET.get("name")
         if name:
             return queryset.filter(name__icontains=name)
@@ -152,7 +152,7 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = Task
     queryset = Task.objects.select_related("task_type").prefetch_related(
-        "assignees__position"
+        "assignees__position", "tags"
     )
     template_name = "task_manager/tasks/task_detail.html"
 
@@ -178,18 +178,14 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 @login_required
+@require_POST
 def toggle_assign_to_task(request, pk):
-    worker = request.user
-    task = get_object_or_404(Task, id=pk)
-
-    if task in worker.tasks.all():
-        worker.tasks.remove(task)
+    task = get_object_or_404(Task, pk=pk)
+    if request.user in task.assignees.all():
+        task.assignees.remove(request.user)
     else:
-        worker.tasks.add(task)
-
-    return HttpResponseRedirect(
-        reverse_lazy("task_manager:task-detail", args=[pk])
-    )
+        task.assignees.add(request.user)
+    return redirect("task_manager:task-detail", pk=pk)
 
 
 # --- Worker Views ---
@@ -219,7 +215,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Worker
     queryset = Worker.objects.select_related("position").prefetch_related(
-        "tasks__task_type"
+        "tasks__task_type", "tasks__tags"
     )
     template_name = "task_manager/workers/worker_detail.html"
 
