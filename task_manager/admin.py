@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Position, Task, TaskType, Worker
+from .models import Position, Tag, Task, TaskType, Worker
 
 
 @admin.register(Worker)
@@ -32,8 +32,19 @@ class TaskAdmin(admin.ModelAdmin):
         "is_completed",
         "priority",
         "task_type",
+        "get_tags",
     )
-    list_filter = ("is_completed", "priority", "task_type")
+    list_filter = ("is_completed", "priority", "task_type", "tags")
+    search_fields = ("name", "description")
+    filter_horizontal = ("assignees", "tags")  # Удобный интерфейс выбора исполнителей и тегов
+
+    @admin.display(description="Tags")
+    def get_tags(self, obj):
+        return ", ".join([tag.name for tag in obj.tags.all()]) or "-"
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 

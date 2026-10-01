@@ -1,47 +1,113 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>
-    {{ task.name }}
-    <a href="{% url 'task_manager:task-delete' pk=task.id %}" class="btn btn-danger link-to-page">
-      Delete
+  <div class="mb-4">
+    <a href="{% url 'task_manager:task-list' %}" class="btn btn-outline-secondary btn-sm mb-3">
+      &larr; Back to Task List
     </a>
-
-    <a href="{% url 'task_manager:task-update' pk=task.id %}" class="btn btn-secondary link-to-page">
-      Update
-    </a>
-  </h1>
-
-  <p><strong>Type:</strong> {{ task.task_type.name }}</p>
-  <p><strong>Priority:</strong> {{ task.get_priority_display }}</p>
-  <p><strong>Deadline:</strong> {{ task.deadline }}</p>
-  <p><strong>Status:</strong> {% if task.is_completed %}Completed{% else %}In progress{% endif %}</p>
-  <p><strong>Description:</strong> {{ task.description }}</p>
-
-  <h3>
-    Assignees
-
-    {% if task in user.tasks.all %}
-      <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-danger link-to-page">
-        Delete me from this task
-      </a>
-    {% else %}
-      <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-success link-to-page">
-        Assign me to this task
-      </a>
-    {% endif %}
-  </h3>
-  <hr>
-  <ul>
-    {% for assignee in task.assignees.all %}
-      <li>
-        <a href="{{ assignee.get_absolute_url }}">
-          {{ assignee.username }} ({{ assignee.first_name }} {{ assignee.last_name }})
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="h3 font-weight-bold mb-0">{{ task.name }}</h1>
+      <div>
+        <a href="{% url 'task_manager:task-update' pk=task.id %}" class="btn btn-outline-primary btn-sm font-weight-bold">
+          Update
         </a>
-        {% if assignee.position %} — {{ assignee.position.name }}{% endif %}
-      </li>
-    {% empty %}
-      <li>No assignees yet.</li>
-    {% endfor %}
-  </ul>
+        <a href="{% url 'task_manager:task-delete' pk=task.id %}" class="btn btn-outline-danger btn-sm font-weight-bold">
+          Delete
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h5 class="card-title font-weight-bold">Description</h5>
+          <p class="card-text text-secondary">
+            {% if task.description %}
+              {{ task.description|linebreaks }}
+            {% else %}
+              <em class="text-muted">No description provided.</em>
+            {% endif %}
+          </p>
+
+          <hr>
+
+          <h5 class="card-title font-weight-bold">Tags</h5>
+          <div class="mb-2">
+            {% for tag in task.tags.all %}
+              <span class="badge badge-info p-2 mr-1">{{ tag.name }}</span>
+            {% empty %}
+              <span class="text-muted">No tags attached.</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white font-weight-bold d-flex justify-content-between align-items-center py-3">
+          <span>Assignees ({{ task.assignees.count }})</span>
+          {% if task in user.tasks.all %}
+            <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-danger btn-sm font-weight-bold">
+              Delete me from this task
+            </a>
+          {% else %}
+            <a href="{% url 'task_manager:toggle-task-assign' pk=task.id %}" class="btn btn-success btn-sm font-weight-bold">
+              Assign me to this task
+            </a>
+          {% endif %}
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for assignee in task.assignees.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <a href="{{ assignee.get_absolute_url }}" class="font-weight-bold text-decoration-none">
+                  {{ assignee.username }}
+                </a>
+                <small class="text-muted">({{ assignee.first_name }} {{ assignee.last_name }})</small>
+              </div>
+              {% if assignee.position %}
+                <span class="badge badge-secondary">{{ assignee.position.name }}</span>
+              {% endif %}
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted">No assignees yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title font-weight-bold mb-3">Task Info</h5>
+
+          <div class="mb-3">
+            <small class="text-muted d-block">Status</small>
+            {% if task.is_completed %}
+              <span class="badge badge-success p-2">Completed</span>
+            {% else %}
+              <span class="badge badge-warning text-dark p-2">In progress</span>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted d-block">Priority</small>
+            <span class="font-weight-bold">{{ task.get_priority_display }}</span>
+          </div>
+
+          <div class="mb-3">
+            <small class="text-muted d-block">Type</small>
+            <span class="badge badge-light border p-2">{{ task.task_type.name }}</span>
+          </div>
+
+          <div class="mb-0">
+            <small class="text-muted d-block">Deadline</small>
+            <span class="font-weight-bold text-danger">{{ task.deadline }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

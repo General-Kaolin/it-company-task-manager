@@ -221,6 +221,14 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     )
     template_name = "task_manager/workers/worker_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        worker = self.object
+
+        context["completed_tasks"] = worker.tasks.filter(is_completed=True)
+        context["uncompleted_tasks"] = worker.tasks.filter(is_completed=False)
+        return context
+
 
 class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
     model = Worker

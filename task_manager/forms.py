@@ -2,19 +2,21 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Position, Task, TaskType, Worker
+from .models import Position, Task, TaskType, Worker, Tag, Worker
 
 
 # --- Forms for Task ---
 
 class TaskForm(forms.ModelForm):
     assignees = forms.ModelMultipleChoiceField(
-        queryset=get_user_model().objects.all(),
+        queryset=Worker.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
-    deadline = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"}),
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
     )
 
     class Meta:
