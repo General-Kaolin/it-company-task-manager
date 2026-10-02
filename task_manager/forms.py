@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Task, Tag, Worker
+from task_manager.models import Task, Tag, Worker
 
 
 # --- Forms for Task ---
