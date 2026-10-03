@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 font-weight-bold mb-0">Tasks</h1>
+    <a href="{% url 'task_manager:task-create' %}" class="btn btn-primary font-weight-bold">
+      + Create Task
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <form method="get" action="" class="form-inline">
+        <div class="input-group w-100">
+          {{ search_form|crispy }}
+          <div class="input-group-append ml-2">
+            <button class="btn btn-secondary font-weight-bold" type="submit">🔍 Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if task_list %}
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Tags</th>
+              <th>Deadline</th>
+              <th>Priority</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in task_list %}
+              <tr>
+                <td>{{ task.id }}</td>
+                <td>
+                  <a href="{% url 'task_manager:task-detail' pk=task.id %}" class="font-weight-bold text-decoration-none">
+                    {{ task.name }}
+                  </a>
+                </td>
+                <td>
+                  <span class="badge badge-light border">{{ task.task_type.name }}</span>
+                </td>
+                <td>
+                  {% for tag in task.tags.all %}
+                    <span class="badge badge-info">{{ tag.name }}</span>
+                  {% empty %}
+                    <span class="text-muted small">—</span>
+                  {% endfor %}
+                </td>
+                <td>{{ task.deadline|date:"M d, Y" }}</td>
+                <td>
+                  <span class="badge badge-secondary">{{ task.get_priority_display }}</span>
+                </td>
+                <td>
+                  {% if task.is_completed %}
+                    <span class="badge badge-success">Done</span>
+                  {% else %}
+                    <span class="badge badge-warning text-dark">Pending</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="alert alert-info shadow-sm" role="alert">
+      There are no tasks available.
+    </div>
+  {% endif %}
+{% endblock %}

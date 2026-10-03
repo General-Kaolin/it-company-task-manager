@@ -1,0 +1,21 @@
+[
+{
+  "model": "task_manager.worker",
+  "pk": 13,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$qsXFM8XShYZbkVGJKDCjoj$fuGr0w3zq11J+fSrPC8SBlEin+m5kvYZ2h6Stnngu7I=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-01T20:23:24.681Z",
+    "position": null,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

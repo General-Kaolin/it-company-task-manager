@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container my-4">
+    <h2>Worker: {{ worker.first_name }} {{ worker.last_name }} ({{ worker.username }})</h2>
+    <p><strong>Position:</strong> {{ worker.position.name }}</p>
+
+    <hr>
+
+    <div class="row">
+
+      <div class="col-md-6 mb-4">
+        <div class="card border-warning shadow-sm">
+          <div class="card-header bg-warning text-dark font-weight-bold">
+            In Progress Tasks ({{ uncompleted_tasks.count }})
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for task in uncompleted_tasks %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'task_manager:task-detail' task.id %}">{{ task.name }}</a>
+                <span class="badge badge-secondary">{{ task.task_type.name }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No active tasks.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card border-success shadow-sm">
+          <div class="card-header bg-success text-white font-weight-bold">
+            Completed Tasks ({{ completed_tasks.count }})
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for task in completed_tasks %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'task_manager:task-detail' task.id %}">{{ task.name }}</a>
+                <span class="badge badge-secondary">{{ task.task_type.name }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No completed tasks yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

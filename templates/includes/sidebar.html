@@ -1,0 +1,29 @@
+<div class="position-sticky pt-3">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link text-dark font-weight-bold py-2" href="{% url 'task_manager:index' %}">
+        <i class="fas text-primary mr-2"></i>Home
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark font-weight-bold py-2" href="{% url 'task_manager:task-list' %}">
+        <i class="fas text-warning mr-2"></i>Tasks
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark font-weight-bold py-2" href="{% url 'task_manager:worker-list' %}">
+        <i class="fas text-info mr-2"></i>Workers
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark font-weight-bold py-2" href="{% url 'task_manager:position-list' %}">
+        <i class="fas text-success mr-2"></i>Positions
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark font-weight-bold py-2" href="{% url 'task_manager:task-type-list' %}">
+        <i class="fas text-secondary mr-2"></i>Task Types
+      </a>
+    </li>
+  </ul>
+</div>
